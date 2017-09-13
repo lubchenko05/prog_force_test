@@ -12,10 +12,14 @@ def parse_data(file):
     with open(file, 'r') as f:
         data = f.read()
         f.close()
-    return [value for value in [(i.split('\n')[0], i.split("Subject: ")[1].split('X-Content-Type-Outer-Envelope:')[0])
-                                if len(i.split('\n')[0]) > 0 and not i.split('\n')[0].startswith('-')
-                                and not i.split('\n')[0].startswith('\n')
-                                else None for i in data.split('\n\n\n\n')] if value]
+    if data:
+        return [value for value in [(i.split('\n')[0], i.split("Subject: ")[1]
+                                     .split('X-Content-Type-Outer-Envelope:')[0])
+                                    if len(i.split('\n')[0]) > 0 and not i.split('\n')[0].startswith('-')
+                                    and not i.split('\n')[0].startswith('\n')
+                                    else None for i in data.split('\n\n\n\n')] if value]
+    else:
+        return None
 
 
 def repr_message(data):
@@ -48,6 +52,9 @@ def repr_count_of_message(data):
 
 if __name__ == '__main__':
     data = parse_data('mbox.txt')
-    repr_message(data)
-    print('\n-----------------------------------------------------------------------\n')
-    repr_count_of_message(data)
+    if data:
+        repr_message(data)
+        print('\n-----------------------------------------------------------------------\n')
+        repr_count_of_message(data)
+    else:
+        print("Parse error!")
